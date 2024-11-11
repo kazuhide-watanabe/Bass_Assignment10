@@ -12,8 +12,11 @@
 # Anything else that's relevant: This funtion was completed and troubleshooted by Cheikh and Kazu.
 #**********************************
 
+#API.py
+
 import json
 import requests
+import csv
 
 class API(object):
     """description of class"""
@@ -32,5 +35,45 @@ class API(object):
         # for park in parsed_json['data']:
             # print(park['description'])
         print(parsed_json)
+
+#import requests
+import json
+
+
+class API:
+    """Handles API calls, data parsing, and CSV writing."""
+
+    def __init__(self, url):
+        self.url = url
+
+    def fetch_data(self):
+        """Fetches data from the API and returns it as a Python dictionary."""
+        try:
+            response = requests.get(self.url)
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            print("Error fetching data:" + e)
+            return {}
+
+    def extract_data(self, data):
+        """Extracts and formats specific data from the JSON response."""
+        extracted_data = []
+        # Replace with actual field extraction based on the JSON structure
+        for item in data.get("data", {}).get("results", []):
+            extracted_data.append({
+                "title": item.get("title"),
+                "description": item.get("description", "No description available")
+            })
+        return extracted_data
+
+    def write_to_csv(self, data, filename="output.csv"):
+        """Writes extracted data to a CSV file."""
+        with open(filename, "w", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=["title", "description"])
+            writer.writeheader()
+            for row in data:
+                writer.writerow(row)
+        print("Data written to " + filename)
 
 
