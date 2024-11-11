@@ -17,7 +17,7 @@ import requests
 
 class API(object):
     """description of class"""
-    def APIDemo():
+    def APIDemo(self):
         response = requests.get('http://gateway.marvel.com/v1/public/comics?ts=1&apikey=852bbd6c4a0be23725334834ddd7a9d1&hash=9806a1850d28d061c97b858e691cad1e')
         json_string = response.content
 
