@@ -18,28 +18,6 @@ import json
 import requests
 import csv
 
-class API(object):
-    """description of class"""
-    def APIDemo(self):
-        response = requests.get('http://gateway.marvel.com/v1/public/comics?ts=1&apikey=852bbd6c4a0be23725334834ddd7a9d1&hash=9806a1850d28d061c97b858e691cad1e')
-        json_string = response.content
-
-        parsed_json = json.loads(json_string) # Now we have a python dictionary
-
-        #print(parsed_json)
-        #print(parsed_json['data'][0]['description'])
-        #print(parsed_json['data'][0]['directionsInfo'])
-    
-        # total = int(parsed_json['total']) # The number of parks that were returned
-
-        # for park in parsed_json['data']:
-            # print(park['description'])
-        print(parsed_json)
-
-#import requests
-import json
-
-
 class API:
     """Handles API calls, data parsing, and CSV writing."""
 
@@ -48,32 +26,31 @@ class API:
 
     def fetch_data(self):
         """Fetches data from the API and returns it as a Python dictionary."""
-        try:
-            response = requests.get(self.url)
-            response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
-            print("Error fetching data:" + e)
-            return {}
+        response = requests.get(self.url)
+        json_string = response.content
+        data = json.loads(json_string)
+        return data
 
     def extract_data(self, data):
-        """Extracts and formats specific data from the JSON response."""
+        """Extracts comic titles and counts character appearances."""
         extracted_data = []
-        # Replace with actual field extraction based on the JSON structure
-        for item in data.get("data", {}).get("results", []):
-            extracted_data.append({
-                "title": item.get("title"),
-                "description": item.get("description", "No description available")
-            })
-        return extracted_data
+        character_counts = {}
 
-    def write_to_csv(self, data, filename="output.csv"):
-        """Writes extracted data to a CSV file."""
-        with open(filename, "w", newline="") as file:
-            writer = csv.DictWriter(file, fieldnames=["title", "description"])
-            writer.writeheader()
-            for row in data:
-                writer.writerow(row)
-        print("Data written to " + filename)
+        # Loop through each comic item
+        for item in data.get("data", {}).get("results", []):
+            # Add the comic title
+            title = item.get("title", "Unknown Title")
+            extracted_data.append({"title": title})
+
+            # Count each character's appearance
+            for character in item.get("characters", {}).get("items", []):
+                character_name = character.get("name", "Unknown Character")
+                if character_name in character_counts:
+                    character_counts[character_name] += 1
+                else:
+                    character_counts[character_name] = 1
+
+        return extracted_data, character_counts
+
 
 
