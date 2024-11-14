@@ -3,13 +3,13 @@
 # email:  watanake@mail.uc.edu
 #         abdoulch@mail.uc.edu
 # Assignment Number: Assignment 10
-# Due Date:  11/07/2024
+# Due Date:  11/14/2024
 # Course #/Section: IS 4010/001 
 # Semester/Year:   Fall/2024
 # Brief Description of the assignment: Group project where we build a URL, receive results from a server, parse the results, and extract some data.
-# Brief Description of what this module does:   
+# Brief Description of what this module does: This module calls all of the functions in the API.py. The code iterates over the dictionary and list to then print all the comic titles, and the character counts 
 # Citations: In class notes, Bill Nicholson 
-# Anything else that's relevant: This funtion was completed and troubleshooted by Cheikh and Kazu.
+# Anything else that's relevant: This funtion was completed and troubleshooted by Cheikh and Kazu. When creating the url, there I had to include the "hash", and I had to put the ts and apikey in a hash generator to get the section of the url that starts with "hash=".
 #**********************************
 
 # main.py
@@ -22,19 +22,19 @@ if __name__ == "__main__":
     api = API(url)
 
     # Fetch data from the API
-    data = api.fetch_data()
+    data = api.fetchData()
 
     # Extract relevant data: comic titles and character counts
-    extracted_data, character_counts = api.extract_data(data)
+    extractedData, characterCounts = api.extractData(data)
 
     # Print extracted comic titles
     print("Comic Titles:")
-    for item in extracted_data:
+    for item in extractedData:
         print(item["title"])
 
     # Print character counts
     print("\nCharacter Counts:")
-    for character, count in character_counts.items():
+    for character, count in characterCounts.items():
         print(f"{character}: {count}")
 
 
